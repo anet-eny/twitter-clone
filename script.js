@@ -1,10 +1,7 @@
 import { tweetsData } from './data.js'
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid'
 
-const tweetInput = document.getElementById('tweet-input')
 
-// tweetBtn.addEventListener('click', function(){
-//     console.log(tweetInput.value)
-// })
 
 
 document.addEventListener('click', function(e){
@@ -61,7 +58,23 @@ function handleReplyClick(replyId){
 
 
 function handleTweetBtnClick(){
-    console.log(tweetInput.value)
+    const tweetInput = document.getElementById('tweet-input')
+    
+    if(tweetInput.value){
+        tweetsData.unshift({
+            handle: `@Scrimba`,
+            profilePic: `images/scrimbalogo.png`,
+            likes: 0,
+            retweets: 0,
+            tweetText: tweetInput.value,
+            replies: [],
+            isLiked: false,
+            isRetweeted: false,
+            uuid: uuidv4()
+        })
+        render()
+        tweetInput.value = ''
+    }
 }
 
 
