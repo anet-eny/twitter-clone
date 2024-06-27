@@ -63,7 +63,6 @@ function handleDeleteClick(tweetId){
     }
 
     render()
-    
 }
 
 function handleReplyClick(replyId){
@@ -162,6 +161,13 @@ function getFeedHtml(){
                     ></i>
                 </span>
             </div>   
+            <div class="comment">
+                <input 
+                placeholder="Add comment" 
+                id="comment-input"
+                ></input>
+                <i class="fa-regular fa-paper-plane"></i>
+            </div> 
         </div>            
     </div>
     <div class="hidden" id="replies-${tweet.uuid}">
