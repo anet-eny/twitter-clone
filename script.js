@@ -2,8 +2,6 @@ import { tweetsData } from './data.js'
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid'
 
 
-
-
 document.addEventListener('click', function(e){
     if(e.target.dataset.like){
         handleLikeClick(e.target.dataset.like)
@@ -12,17 +10,23 @@ document.addEventListener('click', function(e){
         handleRetweetClick(e.target.dataset.retweet)
     }
     else if(e.target.dataset.reply){
-        handleReplyClick(e.target.dataset.reply)
+        handleReplyVisibility(e.target.dataset.reply)
     }
     else if(e.target.dataset.delete){
         handleDeleteClick(e.target.dataset.delete)
     }
     else if(e.target.dataset.comment){
-        handleCommentClick(e.target.dataset.comment)
+        handleCommentSubmit(e.target.dataset.comment)
     }
     else if(e.target.id === 'tweet-btn'){
         handleTweetBtnClick()
     } 
+})
+
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' && e.target.matches('input[data-tweet-id]')) {
+        handleCommentSubmit(e.target.dataset.tweetId)
+    }
 })
 
 function handleLikeClick(tweetId){
@@ -67,25 +71,28 @@ function handleDeleteClick(tweetId){
     render()
 }
 
-function handleReplyClick(replyId){
+function handleReplyVisibility(replyId){
     document.getElementById(`replies-${replyId}`).classList.toggle("hidden")
 }
 
-function handleCommentClick(tweetId){
+function handleCommentSubmit(tweetId){
     const inputValue = document.getElementById(`comment-${tweetId}`).value
     const targetTweetObj = tweetsData.filter(function(tweet){
         return tweetId === tweet.uuid
     })[0]
-    targetTweetObj.replies.push(
-        {
-            handle: `@AmazingUser 😺`,
-            profilePic: `images/scrimbalogo.png`,
-            tweetText: `${inputValue}`,
-        },
-    )
+
+    if(inputValue){
+        targetTweetObj.replies.push(
+            {
+                handle: `@AmazingUser 😺`,
+                profilePic: `images/scrimbalogo.png`,
+                tweetText: `${inputValue}`,
+            },
+        )
+    }
     
     render()
-    handleReplyClick(tweetId)
+    handleReplyVisibility(tweetId)
 }
 
 
@@ -184,7 +191,8 @@ function getFeedHtml(){
                 <label for="comment-${tweet.uuid}" class="hidden">Add comment</label>        
                 <input
                 id="comment-${tweet.uuid}"
-                name="comment-${tweet.uuid}" 
+                name="comment-${tweet.uuid}"
+                data-tweet-id="${tweet.uuid}"
                 placeholder="Add comment" 
                 ></input>
                 <i class="fa-regular fa-paper-plane"
