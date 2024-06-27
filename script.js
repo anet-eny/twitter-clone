@@ -72,7 +72,7 @@ function handleReplyClick(replyId){
 }
 
 function handleCommentClick(tweetId){
-    const inputValue = document.querySelector('input').value
+    const inputValue = document.getElementById(`comment-${tweetId}`).value
     const targetTweetObj = tweetsData.filter(function(tweet){
         return tweetId === tweet.uuid
     })[0]
@@ -81,9 +81,11 @@ function handleCommentClick(tweetId){
             handle: `@AmazingUser 😺`,
             profilePic: `images/scrimbalogo.png`,
             tweetText: `${inputValue}`,
-        }
+        },
     )
+    
     render()
+    handleReplyClick(tweetId)
 }
 
 
