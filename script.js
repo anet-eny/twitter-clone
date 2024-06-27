@@ -17,6 +17,9 @@ document.addEventListener('click', function(e){
     else if(e.target.dataset.delete){
         handleDeleteClick(e.target.dataset.delete)
     }
+    else if(e.target.dataset.comment){
+        handleCommentClick(e.target.dataset.comment)
+    }
     else if(e.target.id === 'tweet-btn'){
         handleTweetBtnClick()
     } 
@@ -61,12 +64,26 @@ function handleDeleteClick(tweetId){
     if (index !== -1){
         tweetsData.splice(index, 1)
     }
-
     render()
 }
 
 function handleReplyClick(replyId){
     document.getElementById(`replies-${replyId}`).classList.toggle("hidden")
+}
+
+function handleCommentClick(tweetId){
+    const inputValue = document.querySelector('input').value
+    const targetTweetObj = tweetsData.filter(function(tweet){
+        return tweetId === tweet.uuid
+    })[0]
+    targetTweetObj.replies.push(
+        {
+            handle: `@AmazingUser 😺`,
+            profilePic: `images/scrimbalogo.png`,
+            tweetText: `${inputValue}`,
+        }
+    )
+    render()
 }
 
 
@@ -75,7 +92,7 @@ function handleTweetBtnClick(){
     
     if(tweetInput.value){
         tweetsData.unshift({
-            handle: `@Scrimba`,
+            handle: `@AmazingUser 😺`,
             profilePic: `images/scrimbalogo.png`,
             likes: 0,
             retweets: 0,
@@ -162,11 +179,15 @@ function getFeedHtml(){
                 </span>
             </div>   
             <div class="comment">
-                <input 
+                <label for="comment-${tweet.uuid}" class="hidden">Add comment</label>        
+                <input
+                id="comment-${tweet.uuid}"
+                name="comment-${tweet.uuid}" 
                 placeholder="Add comment" 
-                id="comment-input"
                 ></input>
-                <i class="fa-regular fa-paper-plane"></i>
+                <i class="fa-regular fa-paper-plane"
+                data-comment="${tweet.uuid}"
+                ></i>
             </div> 
         </div>            
     </div>
